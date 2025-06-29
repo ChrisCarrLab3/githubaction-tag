@@ -1,6 +1,11 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -19,8 +24,7 @@ jobs:
 
       - name: Tag release in GitHub
         if: |
-          github.event_name == 'push' &&
-          startsWith(github.ref, 'refs/heads/main') &&
+          github.event.pull_request.merged == true && 
           startsWith(github.event.pull_request.head.ref, 'release/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
