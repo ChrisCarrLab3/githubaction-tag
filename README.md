@@ -41,6 +41,9 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        
       - name: Tag release in GitHub on merge from release branch
         if: |
           github.event.pull_request.merged == true && 
