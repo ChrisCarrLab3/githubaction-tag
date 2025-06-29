@@ -1,5 +1,7 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+permissions:
+  contents: write
 on:
   pull_request:
     types:
@@ -30,10 +32,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          if [ -z "$RELEASE_BRANCH" ]; then
+            echo "No release branch found in recent merges."
+            exit 0
+          fi
           RELEASE_NAME="${RELEASE_BRANCH#release/}"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           echo $RELEASE_NAME tag being created
           git tag "$RELEASE_NAME"
-          git push origin "$RELEASE_NAME"
-          
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RELEASE_NAME"
