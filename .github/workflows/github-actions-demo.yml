@@ -16,3 +16,20 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+      - name: Tag release in GitHub
+        if: |
+          github.event_name == 'push' &&
+          startsWith(github.ref, 'refs/heads/main') &&
+          startsWith(github.event.pull_request.head.ref, 'release/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          RELEASE_NAME="${RELEASE_BRANCH#release/}"
+          # git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # git config --global user.name "github-actions[bot]"
+          echo ${{RELEASE_NAME}} tag being created
+          git tag "$RELEASE_NAME"
+          git push origin "$RELEASE_NAME"
+          
