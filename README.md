@@ -63,3 +63,9 @@ jobs:
           git tag "$RELEASE_NAME"
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RELEASE_NAME"
 ```
+
+Release 1.0.5
+-------------
+
+Release 1.0.6
+-------------
